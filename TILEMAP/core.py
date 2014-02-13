@@ -27,6 +27,7 @@ class Map:
 		for i in range(self.height):
 			line = self.f.readline()
 			line = line.strip("\n")
+			line = line.strip("\r")
 			tmplist = line.split(",", self.width)
 
 			self.coords += tmplist
@@ -43,11 +44,12 @@ class Map:
 
 		self.collisions = []
 		for i in range(self.height):
-			line = self.f.readline()
+			line = self.fc.readline()
 			line = line.strip("\n")
 			tmplist = line.split(",", self.width)
+			#print tmplist
+			self.collisions.append(tmplist)
 
-			self.collisions += tmplist
-
+		#print self.collisions
     def update(self):
 		pass

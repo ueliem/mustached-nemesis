@@ -9,12 +9,19 @@ class Event:
 
 class TickEvent(Event):
     def __init__(self):
-	self.text = "Tick"
+		self.text = "Tick"
 
 class KeyPressEvent(Event):
     def __init__(self, key):
-	self.text = "KeyPress"
-	self.key = key
+		self.text = "KeyPress"
+		self.key = key
+
+class DialogEvent(Event):
+    def __init__(self, talker, talkedto):
+		self.text = "Dialog Event"
+		self.talker = talker
+		self.talkedto = talkedto
+	
 
 class EventManager:
     def __init__(self):
