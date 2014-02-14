@@ -6,12 +6,13 @@ import GAME.ENTITIES.baseentity
 import TILEMAP.core
 
 class TestNPC(GAME.ENTITIES.baseentity.BaseEntity):
-	def __init__(self, tl, eventmanager, configclass, gamemap):
+	def __init__(self, tl, eventmanager, configclass, environment, dialogfile):
 		self.tilesheet = tl
 		self.eventmanager = eventmanager
 		self.eventmanager.addListener(self)
 		self.configclass = configclass
-		self.gamemap = gamemap
+		self.environment = environment
+		self.dialogfile = dialogfile
 		self.drawSurf = pygame.Surface((24,32), SRCALPHA)
 		##########
 		self.xpos = 32
@@ -85,55 +86,12 @@ class TestNPC(GAME.ENTITIES.baseentity.BaseEntity):
 		self.drawSurf = pygame.Surface((24,32), SRCALPHA)
 		self.drawSurf.blit(self.tilesheet, (0,0), self.curRect)
 
-	def update_position(self):
-		#print "player"
-		if self.moving:
-			if self.counter >= self.threshold:
-				if self.direction == self.configclass.DIRECTION_UP:
-					self.ypos -= 1
-				elif self.direction == self.configclass.DIRECTION_DOWN:
-					self.ypos += 1
-				elif self.direction == self.configclass.DIRECTION_LEFT:
-					self.xpos -= 1
-				elif self.direction == self.configclass.DIRECTION_RIGHT:
-					self.xpos += 1
-				self.tileSoFar += 1
-		
-				self.counter = 0
-
-				if self.tileSoFar == 16:
-					keys = pygame.key.get_pressed()
-					if self.direction == self.configclass.DIRECTION_UP:
-						self.ygrid -= 1
-					elif self.direction == self.configclass.DIRECTION_DOWN:
-						self.ygrid += 1
-					elif self.direction == self.configclass.DIRECTION_LEFT:
-						self.xgrid -= 1
-					elif self.direction == self.configclass.DIRECTION_RIGHT:
-						self.xgrid += 1
-
-					if keys[K_UP] and self.direction == self.configclass.DIRECTION_UP and self.check_can_move(self.direction):
-						self.tileSoFar = 0
-					elif keys[K_DOWN] and self.direction == self.configclass.DIRECTION_DOWN and self.check_can_move(self.direction):
-						self.tileSoFar = 0
-					elif keys[K_LEFT] and self.direction == self.configclass.DIRECTION_LEFT and self.check_can_move(self.direction):
-						self.tileSoFar = 0
-					elif keys[K_RIGHT] and self.direction == self.configclass.DIRECTION_RIGHT and self.check_can_move(self.direction):
-						self.tileSoFar = 0
-					else:
-						#print "stop moving"
-						self.tileSoFar = 0
-						self.moving = False
-					
-				
-
-			else:
-				self.counter += 1
-		else:
-			pass
-
 	def listen(self, event):
 		if isinstance(event, GAME.EVENTMANAGER.eventmanager.TickEvent):
 			pass
-	def draw(self, surface):
-		surface.blit(self.drawSurf, ((self.xpos) - 4, self.ypos + 16))
+		elif isinstance(event, GAME.EVENTMANAGER.eventmanager.InteractionEvent):
+			if event.targetxgrid == self.xgrid and event.targetygrid == self.ygrid:
+				e = GAME.EVENTMANAGER.eventmanager.DialogEvent(event.initiator, self, self.dialogfile)
+				self.eventmanager.inform(e)
+	def draw(self, surface, offset):
+		surface.blit(self.drawSurf, ((self.xpos) - 4 + offset[0], self.ypos + 16 + offset[1]))

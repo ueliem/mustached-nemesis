@@ -16,12 +16,23 @@ class KeyPressEvent(Event):
 		self.text = "KeyPress"
 		self.key = key
 
+class InteractionEvent(Event):
+    def __init__(self, initiator, targetxgrid, targetygrid):
+		self.text = "Interaction Event"
+		self.initiator = initiator
+		self.targetxgrid = targetxgrid
+		self.targetygrid = targetygrid
+
 class DialogEvent(Event):
-    def __init__(self, talker, talkedto):
+    def __init__(self, talker, talkedto, dialogfile):
 		self.text = "Dialog Event"
 		self.talker = talker
 		self.talkedto = talkedto
+		self.dialogfile = dialogfile
 	
+class EnablePlayerEvent(Event):
+	def __init__(self):
+		self.text = "Enable Player Event"
 
 class EventManager:
     def __init__(self):

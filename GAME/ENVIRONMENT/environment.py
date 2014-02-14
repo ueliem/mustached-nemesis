@@ -35,8 +35,8 @@ class Environment(GAME.ENTITIES.listener.BaseListener):
 
 	def add_entity(self, e):
 		self.entities.append(e)
-	def draw(self, surface):
+	def draw(self, surface, offset):
 		self.entities.sort(key=lambda x: x.ygrid, reverse=False)
-		surface.blit(self.gamemap.drawSurf, (0,0))#self.gamemap.draw()
+		surface.blit(self.gamemap.drawSurf, offset)#(0,0))#self.gamemap.draw()
 		for i in range(len(self.entities)):
-			self.entities[i].draw(surface)
+			self.entities[i].draw(surface, offset)
