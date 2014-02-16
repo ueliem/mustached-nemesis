@@ -44,5 +44,7 @@ class EventManager:
 		self.listeners.remove([listener])
 		print "removed listener"
     def inform(self, event):
+		#if not isinstance(event, TickEvent):
+		#	print event.text
 		for listener in self.listeners:
 	    		listener.listen(event)

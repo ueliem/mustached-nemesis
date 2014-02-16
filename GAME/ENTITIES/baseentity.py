@@ -12,5 +12,7 @@ class BaseEntity(GAME.ENTITIES.listener.BaseListener):
 		self.ygrid = None
 	def listen(self, event):
 		pass
+	def load_resources(self, resourcemanager):
+		pass
 	def draw(self, surface, offset):
 		pass

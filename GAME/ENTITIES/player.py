@@ -7,8 +7,8 @@ import GAME.EVENTMANAGER.eventmanager
 import TILEMAP.core
 
 class Player(GAME.ENTITIES.baseentity.BaseEntity):
-	def __init__(self, tl, eventmanager, configclass, environment):
-		self.tilesheet = tl
+	def __init__(self, eventmanager, configclass, environment):
+		self.tilesheet = None
 		self.eventmanager = eventmanager
 		self.eventmanager.addListener(self)
 		self.configclass = configclass
@@ -24,13 +24,13 @@ class Player(GAME.ENTITIES.baseentity.BaseEntity):
 		self.ableToMove = True
 		self.moving = False
 		self.direction = self.configclass.DIRECTION_DOWN
-
+		self.is_interacting = False
 		self.counter = 0
 		self.threshold = 1
 		self.tileSoFar = 0
 		##########
 		self.curRect = Rect(24,0,24,32)
-		self.drawSurf.blit(self.tilesheet, (0,0), self.curRect)
+		#self.drawSurf.blit(self.tilesheet, (0,0), self.curRect)
 	def update(self, direction, amnt):
 		self.update_position()
 		self.update_image(direction, amnt)
@@ -86,7 +86,6 @@ class Player(GAME.ENTITIES.baseentity.BaseEntity):
 		self.drawSurf.blit(self.tilesheet, (0,0), self.curRect)
 
 	def update_position(self):
-		#print "player"
 		if self.moving:
 			if self.counter >= self.threshold:
 				if self.direction == self.configclass.DIRECTION_UP:
@@ -121,7 +120,6 @@ class Player(GAME.ENTITIES.baseentity.BaseEntity):
 					elif keys[K_RIGHT] and self.direction == self.configclass.DIRECTION_RIGHT and self.check_can_move(self.direction):
 						self.tileSoFar = 0
 					else:
-						#print "stop moving"
 						self.tileSoFar = 0
 						self.moving = False
 
@@ -132,33 +130,6 @@ class Player(GAME.ENTITIES.baseentity.BaseEntity):
 
 	def listen(self, event):
 		if isinstance(event, GAME.EVENTMANAGER.eventmanager.TickEvent):
-			#print "received"
-			'''pygame.event.pump()
-			for entry in pygame.event.get():
-				if entry.type == QUIT:
-					sys.exit()
-				elif entry.type == KEYDOWN:
-					#print "received"
-					if (not self.moving) and self.ableToMove:
-					#print "received"
-						if entry.key == K_UP:
-							self.direction = self.configclass.DIRECTION_UP
-							if self.check_can_move(self.direction):
-								self.moving = True
-						elif entry.key == K_DOWN:
-							self.direction = self.configclass.DIRECTION_DOWN
-							if self.check_can_move(self.direction):
-								self.moving = True
-						elif entry.key == K_LEFT:
-							self.direction = self.configclass.DIRECTION_LEFT
-							if self.check_can_move(self.direction):
-								self.moving = True
-						elif entry.key == K_RIGHT:
-							self.direction = self.configclass.DIRECTION_RIGHT
-							if self.check_can_move(self.direction):
-								self.moving = True
-				else:
-					pass'''
 			self.update(self.direction, self.tileSoFar)
 		elif isinstance(event, GAME.EVENTMANAGER.eventmanager.KeyPressEvent):
 			if (not self.moving) and self.ableToMove:
@@ -178,7 +149,7 @@ class Player(GAME.ENTITIES.baseentity.BaseEntity):
 					self.direction = self.configclass.DIRECTION_RIGHT
 					if self.check_can_move(self.direction):
 						self.moving = True
-				elif event.key == K_z:
+				elif event.key == K_z and self.ableToMove == True and not self.is_interacting:
 					e = None
 					if self.direction == self.configclass.DIRECTION_UP:
 						e = GAME.EVENTMANAGER.eventmanager.InteractionEvent(self, self.xgrid, self.ygrid-1)
@@ -189,32 +160,26 @@ class Player(GAME.ENTITIES.baseentity.BaseEntity):
 					elif self.direction == self.configclass.DIRECTION_RIGHT:
 						e = GAME.EVENTMANAGER.eventmanager.InteractionEvent(self, self.xgrid+1, self.ygrid)
 					self.eventmanager.inform(e)
+				elif event.key == K_z and self.is_interacting:
+					self.is_interacting = False
 		elif isinstance(event, GAME.EVENTMANAGER.eventmanager.DialogEvent):
 			self.ableToMove = False
+			self.is_interacting = True
 		elif isinstance(event, GAME.EVENTMANAGER.eventmanager.EnablePlayerEvent):
 			self.ableToMove = True
 	def check_can_move(self, direction):
 		collisonmap = self.environment.create_collison_map()
-		#print collisonmap
 		try:
 			if direction == self.configclass.DIRECTION_UP:
-				#print collisonmap[self.ygrid-1][self.xgrid]
 				if int(collisonmap[self.ygrid-1][self.xgrid]) == 0:
-					#print "Up ok"
 					return True
 			elif direction == self.configclass.DIRECTION_DOWN:
-				#print collisonmap[self.ygrid+1][self.xgrid]
 				if int(collisonmap[self.ygrid+1][self.xgrid]) == 0:
-					#print str(xcoord) + ", " + str(ycoord+1)
-					#print "Down ok"
 					return True
 			elif direction == self.configclass.DIRECTION_LEFT:
-				#print "test"
-				#print collisonmap[self.ygrid][self.xgrid-1]
 				if int(collisonmap[self.ygrid][self.xgrid-1]) == 0:
 					return True
 			elif direction == self.configclass.DIRECTION_RIGHT:
-				#print collisonmap[self.ygrid][self.xgrid+1]
 				if int(collisonmap[self.ygrid][self.xgrid+1]) == 0:
 					return True
 		except IndexError:
@@ -223,3 +188,5 @@ class Player(GAME.ENTITIES.baseentity.BaseEntity):
 	def draw(self, surface, offset):
 		#surface.blit(self.drawSurf, ((self.xpos) - 4, self.ypos + 16))
 		surface.blit(self.drawSurf, (108,64))
+	def load_resources(self, resourcemanager):
+		self.tilesheet = resourcemanager.load_image_alpha("CHARSHEETS/playerchar.png")

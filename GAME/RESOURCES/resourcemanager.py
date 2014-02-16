@@ -18,3 +18,9 @@ class ResourceManager():
 		f = open(os.path.join(self.resourcepath, filename))
 		self.resources[filename] = f
 		return f
+	def load_file_as_string(self, filename):
+		f = open(os.path.join(self.resourcepath, filename))
+		stringf = f.readlines()
+		self.resources[filename] = stringf
+		f.close()
+		return stringf

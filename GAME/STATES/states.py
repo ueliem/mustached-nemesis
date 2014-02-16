@@ -80,8 +80,10 @@ class OverworldState(BaseState):
 		self.dialogmanager = GAME.INTERFACE.dialogmanager.DialogManager(self.eventmanager, self.configclass)
 		self.map = TILEMAP.core.Map(self.resourcemanager.load_file("MAPF/map1.txt"), self.resourcemanager.load_file("MAPC/map1c.txt"), self.resourcemanager.load_image("TILESHEETS/map1.png"))
 		self.environment = GAME.ENVIRONMENT.environment.Environment(self.eventmanager, self.configclass, self.map)
-		self.player = GAME.ENTITIES.player.Player(self.resourcemanager.load_image_alpha("CHARSHEETS/playerchar.png"), self.eventmanager, self.configclass, self.environment)
-		self.testperson = GAME.ENTITIES.testnpc.TestNPC(self.resourcemanager.load_image_alpha("CHARSHEETS/playerchar.png"), self.eventmanager, self.configclass, self.environment, None)
+		self.player = GAME.ENTITIES.player.Player(self.eventmanager, self.configclass, self.environment)
+		self.player.load_resources(self.resourcemanager)
+		self.testperson = GAME.ENTITIES.testnpc.TestNPC(self.eventmanager, self.configclass, self.environment)
+		self.testperson.load_resources(self.resourcemanager)
 		#################
 		self.environment.add_entity(self.player)
 		self.environment.add_entity(self.testperson)
