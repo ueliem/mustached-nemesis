@@ -17,15 +17,15 @@ class Map:
 		self.tilesheet = tl
 		self.coords = []
 
-		widthheight = self.f.readline()
+		widthheight = self.f[0]
 		tmp = widthheight.split("x", 1)
 		self.width = int(tmp[0])
 		self.height = int(tmp[1])
 
 		self.drawSurf = pygame.Surface((self.width*16, self.height*16))
 
-		for i in range(self.height):
-			line = self.f.readline()
+		for i in range(1, self.height+1):
+			line = self.f[i]
 			line = line.strip("\n")
 			line = line.strip("\r")
 			tmplist = line.split(",", self.width)
@@ -44,8 +44,9 @@ class Map:
 
 		self.collisions = []
 		for i in range(self.height):
-			line = self.fc.readline()
+			line = self.fc[i]
 			line = line.strip("\n")
+			line = line.strip("\r")
 			tmplist = line.split(",", self.width)
 			#print tmplist
 			self.collisions.append(tmplist)

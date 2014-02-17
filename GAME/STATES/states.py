@@ -78,7 +78,7 @@ class OverworldState(BaseState):
 
 		self.keyboardcontrol = GAME.CONTROL.keyboard.KeyboardControl(self.eventmanager, self.configclass)
 		self.dialogmanager = GAME.INTERFACE.dialogmanager.DialogManager(self.eventmanager, self.configclass)
-		self.map = TILEMAP.core.Map(self.resourcemanager.load_file("MAPF/map1.txt"), self.resourcemanager.load_file("MAPC/map1c.txt"), self.resourcemanager.load_image("TILESHEETS/map1.png"))
+		self.map = TILEMAP.core.Map(self.resourcemanager.load_file_as_string("MAPF/map1.txt"), self.resourcemanager.load_file_as_string("MAPC/map1c.txt"), self.resourcemanager.load_image("TILESHEETS/map1.png"))
 		self.environment = GAME.ENVIRONMENT.environment.Environment(self.eventmanager, self.configclass, self.map)
 		self.player = GAME.ENTITIES.player.Player(self.eventmanager, self.configclass, self.environment)
 		self.player.load_resources(self.resourcemanager)
