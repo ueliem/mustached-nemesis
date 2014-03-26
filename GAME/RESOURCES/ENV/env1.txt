@@ -1,0 +1,3 @@
+map1.txt
+map1c.txt
+map1.png

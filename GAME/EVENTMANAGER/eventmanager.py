@@ -16,6 +16,11 @@ class KeyPressEvent(Event):
 		self.text = "KeyPress"
 		self.key = key
 
+class LeftMousePressEvent(Event):
+    def __init__(self, pos):
+		self.text = "MousePress"
+		self.pos = pos
+
 class InteractionEvent(Event):
     def __init__(self, initiator, targetxgrid, targetygrid):
 		self.text = "Interaction Event"
