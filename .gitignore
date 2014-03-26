@@ -34,3 +34,7 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+#For this project
+#I do not have the rights for most image files used now.
+*.png
